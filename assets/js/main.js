@@ -1,3 +1,37 @@
+const menuToggle = document.querySelector('.menu-toggle');
+const siteNav = document.querySelector('.site-nav');
+
+if (menuToggle && siteNav) {
+  const closeMenu = () => {
+    siteNav.classList.remove('open');
+    document.body.classList.remove('menu-open');
+    menuToggle.setAttribute('aria-expanded', 'false');
+    menuToggle.setAttribute('aria-label', 'Open menu');
+  };
+
+  menuToggle.addEventListener('click', () => {
+    const willOpen = !siteNav.classList.contains('open');
+    siteNav.classList.toggle('open', willOpen);
+    document.body.classList.toggle('menu-open', willOpen);
+    menuToggle.setAttribute('aria-expanded', String(willOpen));
+    menuToggle.setAttribute('aria-label', willOpen ? 'Close menu' : 'Open menu');
+  });
+
+  siteNav.querySelectorAll('a').forEach((link) => {
+    link.addEventListener('click', closeMenu);
+  });
+
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 860) closeMenu();
+  });
+
+  document.addEventListener('click', (event) => {
+    if (window.innerWidth > 860) return;
+    if (!siteNav.classList.contains('open')) return;
+    if (event.target.closest('.nav-wrap')) return;
+    closeMenu();
+  });
+}
 const path = location.pathname.split('/').pop() || 'index.html';
 
 document.querySelectorAll('nav a').forEach((a) => {
@@ -36,7 +70,7 @@ if (form) {
   });
 }
 
-if (window.innerWidth <= 720) {
+if (window.innerWidth <= 720 && !document.querySelector('.floating-actions')) {
   const bar = document.createElement('div');
   bar.style.cssText = 'position:fixed;left:0;right:0;bottom:0;background:#0b1c47;padding:.5rem;display:flex;gap:.5rem;z-index:120;border-top:1px solid rgba(201,165,87,.35)';
   bar.innerHTML = '<a href="tel:+919414207040" style="flex:1;text-align:center;background:linear-gradient(135deg,#e2c888,#c39943);color:#1a1a1a;font-weight:800;border-radius:999px;padding:.62rem .5rem;text-decoration:none">Call Now</a><a href="https://wa.me/919414207040" target="_blank" style="flex:1;text-align:center;background:linear-gradient(135deg,#149052,#1aa960);color:#fff;font-weight:800;border-radius:999px;padding:.62rem .5rem;text-decoration:none">WhatsApp</a>';
@@ -122,7 +156,7 @@ async function askOpenAI(apiKey, userText) {
   panel.innerHTML = `
     <div class="chat-head">
       <span>AI Legal Assistant</span>
-      <button type="button" aria-label="Close">âœ•</button>
+      <button type="button" aria-label="Close">ÃƒÂ¢Ã…â€œÃ¢â‚¬Â¢</button>
     </div>
     <div class="chat-log" id="chat-log">
       <div class="msg bot">Welcome. Ask your legal question (bail, property, cheque bounce, family law, civil/criminal matters). This is general guidance, not legal representation.</div>
