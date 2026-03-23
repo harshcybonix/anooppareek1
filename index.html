@@ -103,18 +103,26 @@
 </head>
 <body>
   <header class="site-header">
-    <div class="container nav-wrap">
-      <a class="brand" href="index.html">Anoop Pareek</a>
-      <nav>
-        <a href="index.html">Home</a><a href="about.html">About</a><a href="practice-areas.html">Practice Areas</a><a href="experience.html">Experience</a><a href="consultation.html">Consultation</a><a href="contact.html">Contact</a><a href="testimonials.html">Testimonials</a><a href="blog.html">Blog</a>
-      </nav>
-    </div>
-  </header>
+  <div class="container nav-wrap">
+    <a class="brand" href="index.html">Anoop Pareek</a>
+    <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+    <nav class="site-nav" id="site-nav">
+      <a href="index.html">Home</a><a href="about.html">About</a><a href="practice-areas.html">Practice Areas</a><a href="experience.html">Experience</a><a href="consultation.html">Consultation</a><a href="contact.html">Contact</a><a href="testimonials.html">Testimonials</a><a href="blog.html">Blog</a>
+    </nav>
+  </div>
+</header>
 
   <main>
     <section class="container section">
       <div class="campaign-banner large-banner">
-        <img class="campaign-poster" src="assets/images/anup1.png" alt="Advocate Anoop Pareek - Candidate for Bar Council of Rajasthan Election 2026" />
+        <picture>
+          <source media="(max-width: 720px)" srcset="assets/images/anup2.png" />
+          <img class="campaign-poster" src="assets/images/anup1.png" alt="Advocate Anoop Pareek - Candidate for Bar Council of Rajasthan Election 2026" />
+        </picture>
         <div class="campaign-actions banner-actions">
           <a class="btn primary" href="#bcr-election-search">Search Name In Voter List</a>
           <a class="btn tertiary" href="tel:+919414207040">Connect With Candidate</a>
@@ -130,7 +138,7 @@
         <div class="cta-row">
           <a class="btn primary" href="tel:+919414207040">Call 09414207040</a>
           <a class="btn secondary" href="https://wa.me/919414207040" target="_blank">WhatsApp Consultation</a>
-          <a class="btn primary jump-link" href="#bcr-election-search">Search name in BCR-2026 voter list</a>
+          <a class="btn primary jump-link" href="#bcr-election-search">Search name in BCR-2026 list</a>
           <a class="btn tertiary" href="consultation.html">Book Appointment</a>
         </div>
         <div class="hero-kpis">
