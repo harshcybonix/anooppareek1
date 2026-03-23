@@ -789,9 +789,9 @@ iframe {
 
   .campaign-poster {
     width: 100%;
-    height: 80svh !important;
-    min-height: 80svh !important;
-    max-height: 80svh !important;
+    height: 70svh !important;
+    min-height: 70svh !important;
+    max-height: 70svh !important;
     object-fit: contain !important;
     object-position: center top !important;
     border-radius: 18px;
