@@ -1,4 +1,4 @@
-﻿const path = location.pathname.split('/').pop() || 'index.html';
+const path = location.pathname.split('/').pop() || 'index.html';
 
 document.querySelectorAll('nav a').forEach((a) => {
   const href = a.getAttribute('href');
@@ -122,7 +122,7 @@ async function askOpenAI(apiKey, userText) {
   panel.innerHTML = `
     <div class="chat-head">
       <span>AI Legal Assistant</span>
-      <button type="button" aria-label="Close">✕</button>
+      <button type="button" aria-label="Close">âœ•</button>
     </div>
     <div class="chat-log" id="chat-log">
       <div class="msg bot">Welcome. Ask your legal question (bail, property, cheque bounce, family law, civil/criminal matters). This is general guidance, not legal representation.</div>
@@ -193,5 +193,98 @@ async function askOpenAI(apiKey, userText) {
   sendBtn.addEventListener('click', handleSend);
   input.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') handleSend();
+  });
+})();
+
+const bcrState = {
+  records: null,
+  loading: null
+};
+
+function normalizeDate(value) {
+  if (!value) return '';
+  const text = String(value).trim();
+  if (!text) return '';
+  const parsed = new Date(text);
+  if (!Number.isNaN(parsed.getTime())) {
+    const day = String(parsed.getDate()).padStart(2, '0');
+    const month = String(parsed.getMonth() + 1).padStart(2, '0');
+    const year = parsed.getFullYear();
+    return `${day}-${month}-${year}`;
+  }
+  return text;
+}
+
+async function loadBcrRecords() {
+  if (bcrState.records) return bcrState.records;
+  if (Array.isArray(window.BCR_ELECTION_DATA)) {
+    bcrState.records = window.BCR_ELECTION_DATA;
+    return bcrState.records;
+  }
+  if (bcrState.loading) return bcrState.loading;
+
+  bcrState.loading = fetch('assets/data/bcr-election.json')
+    .then((res) => {
+      if (!res.ok) throw new Error('Unable to load BCR data');
+      return res.json();
+    })
+    .then((data) => {
+      bcrState.records = Array.isArray(data) ? data : [];
+      return bcrState.records;
+    });
+
+  return bcrState.loading;
+}
+
+function renderBcrResults(items) {
+  const results = document.getElementById('bcr-search-results');
+  if (!results) return;
+
+  if (!items.length) {
+    results.innerHTML = '<div class="result-card"><h4>No matching record found</h4><p>Try a different spelling or a shorter name fragment.</p></div>';
+    return;
+  }
+
+  results.innerHTML = items.map((item) => `
+    <article class="result-card">
+      <h4>${item.Name || ''}</h4>
+      <div class="result-meta">
+        <span><strong>Enrolment No:</strong> ${item.EnrolmentNo || ''}</span>
+        <span><strong>Enrolment Date:</strong> ${normalizeDate(item.EnrolmentDate)}</span>
+        <span><strong>City:</strong> ${item.City || ''}</span>
+        <span><strong>District:</strong> ${item.District || ''}</span>
+        <span><strong>Bar Association:</strong> ${item.BarAssociation || ''}</span>
+        <span><strong>Judgship:</strong> ${item.Judgship || ''}</span>
+      </div>
+    </article>
+  `).join('');
+}
+
+(function initBcrSearch() {
+  const form = document.getElementById('bcr-search-form');
+  const input = document.getElementById('bcr-name-input');
+  const status = document.getElementById('bcr-search-status');
+  if (!form || !input || !status) return;
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const query = input.value.trim();
+    if (query.length < 2) {
+      status.textContent = 'Please enter at least 2 letters.';
+      renderBcrResults([]);
+      return;
+    }
+
+    status.textContent = 'Loading BCR records...';
+    try {
+      const records = await loadBcrRecords();
+      const q = query.toUpperCase();
+      const matches = records.filter((item) => String(item.Name || '').toUpperCase().includes(q)).slice(0, 50);
+      status.textContent = `${matches.length} matching record(s) shown${matches.length === 50 ? ' (first 50 only)' : ''}.`;
+      renderBcrResults(matches);
+    } catch (_error) {
+      status.textContent = 'Unable to load search data right now.';
+      renderBcrResults([]);
+    }
   });
 })();
