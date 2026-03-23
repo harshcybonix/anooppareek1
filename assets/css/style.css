@@ -585,3 +585,21 @@ input:focus, textarea:focus { outline: none; border-color: #6889de; box-shadow: 
     grid-template-columns: 1fr;
   }
 }
+@media (max-width: 720px) {
+  .large-banner {
+    padding: .65rem;
+  }
+
+  .campaign-poster {
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
+    object-fit: contain !important;
+    object-position: center !important;
+    background: #0b1d49;
+  }
+
+  .banner-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
